@@ -86,9 +86,16 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         mMarkDownView = (TextView) findViewById(R.id.markdown);
         mMarkDownView.setVisibility(View.INVISIBLE);
         mRootView = (ScrollView) findViewById(R.id.root_view);
-        mRootView.setVisibility(View.GONE);
-        mMarkDownView.setVisibility(View.GONE);
+        findViewById(R.id.note_back_button).setOnClickListener(this);
+        mRootView.setVisibility(View.INVISIBLE);
+        mMarkDownView.setVisibility(View.INVISIBLE);
+        oldstring = getIntent().getStringExtra("content");
+        if (oldstring != null) {
+            editText.setText(oldstring);
+            markDown();
+        }
         initSweetSheet();
+        database = SQLiteDatabase.openOrCreateDatabase(SQLHelper.NAME, null);
     }
 
     private void initSweetSheet() {
@@ -158,15 +165,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         }
         String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".pdf";
         if (!MARKDOWN) {
-            markdown = new MDReader(editText.getText().toString());
-            mMarkDownView.setTextKeepState(markdown.getFormattedContent(), TextView.BufferType.SPANNABLE);
-            editText.setVisibility(View.GONE);
-            mRootView.setVisibility(View.VISIBLE);
-            mMarkDownView.setVisibility(View.VISIBLE);
-            oldstring = editText.getText().toString();
-            ((ImageView) findViewById(R.id.note_markdown)).
-                    setImageDrawable(getResources().getDrawable(R.drawable.icon_markdown1));
-            MARKDOWN = true;
+            markDown();
         }
         try {
             PdfMaker.makeIt(this, filepath, createBitmap(mRootView));
@@ -180,31 +179,22 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         if (!UserInfo.TextPath.exists()) {
             UserInfo.TextPath.mkdirs();
         }
-
         if (!MARKDOWN) {
-            if (markdown == null)
-                markdown = new MDReader(editText.getText().toString());
-            mMarkDownView.setTextKeepState(markdown.getFormattedContent(), TextView.BufferType.SPANNABLE);
-            mRootView.setVisibility(View.VISIBLE);
-            mMarkDownView.setVisibility(View.VISIBLE);
-            editText.setVisibility(View.GONE);
-            oldstring = editText.getText().toString();
-            ((ImageView) findViewById(R.id.note_markdown)).
-                    setImageDrawable(getResources().getDrawable(R.drawable.icon_markdown1));
-            MARKDOWN = true;
-            Logger.e("mark_change");
+            markDown();
         }
         String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".jpg";
-        try {
-            FileOutputStream stream = new FileOutputStream(filepath);
-            Bitmap bitmap = createBitmap(mRootView);
-            if (bitmap != null) {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
+        if (MARKDOWN) {
+            try {
+                FileOutputStream stream = new FileOutputStream(filepath);
+                Bitmap bitmap = createBitmap(mRootView);
+                if (bitmap != null) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
+                }
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -231,30 +221,15 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
             width += v.getChildAt(i).getWidth();
             height += v.getChildAt(i).getHeight();
         }
+        Logger.e("检测到 " + "h: " + height + "w: " + width);
+        if (width <= 0 || height <= 0) {
+            Logger.e("未检测到 " + "h: " + height + "w: " + width);
+            return null;
+        }
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         v.draw(canvas);
         return bitmap;
-    }
-
-    public static Bitmap createBitmap(View v) {
-        v.setDrawingCacheEnabled(true);
-        v.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(v.getDrawingCache());
-        v.setDrawingCacheEnabled(false);
-        return bitmap;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        oldstring = getIntent().getStringExtra("content");
-        if (oldstring != null) {
-            editText.setText(oldstring);
-        }
-        findViewById(R.id.note_back_button).setOnClickListener(this);
-        database = SQLiteDatabase.openOrCreateDatabase(SQLHelper.NAME, null);
-
     }
 
     private void finishTheActivity() {
@@ -326,8 +301,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
 
     private void markDown() {
         if (MARKDOWN) {
-            mMarkDownView.setVisibility(View.GONE);
-            mRootView.setVisibility(View.GONE);
+            mMarkDownView.setVisibility(View.INVISIBLE);
+            mRootView.setVisibility(View.INVISIBLE);
             editText.setVisibility(View.VISIBLE);
             MARKDOWN = false;
             ((ImageView) findViewById(R.id.note_markdown)).
@@ -335,7 +310,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             markdown = new MDReader(editText.getText().toString());
             mMarkDownView.setTextKeepState(markdown.getFormattedContent(), TextView.BufferType.SPANNABLE);
-            editText.setVisibility(View.GONE);
+            editText.setVisibility(View.INVISIBLE);
             mRootView.setVisibility(View.VISIBLE);
             mMarkDownView.setVisibility(View.VISIBLE);
             oldstring = editText.getText().toString();
