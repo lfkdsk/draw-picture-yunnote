@@ -1,0 +1,215 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.lfk.drawapictiure.Activity.RegistAvtivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/register_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue" />
+
+    <RelativeLayout
+        android:id="@+id/register_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue_button_select"
+        android:paddingBottom="12dp"
+        android:paddingRight="10dp"
+        android:paddingTop="12dp">
+
+        <ImageView
+            android:id="@+id/register_back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="4dp"
+            android:padding="4dp"
+            android:src="@mipmap/iconfont_fanhui" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/register_back"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="注册"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/register_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_toolbar"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/account1" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/regname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:background="@null"
+                android:gravity="left"
+                android:hint="请输入您的用户名"
+                android:inputType="textPersonName"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray_text"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"
+                app:met_baseColor="@color/pressed_blue"
+                app:met_primaryColor="@color/blue" />
+        </LinearLayout>
+        <!--<ImageView-->
+        <!--android:background="@color/blue"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp" />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/password1" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/regpsw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:background="@null"
+                android:gravity="left"
+                android:hint="请输入您的密码"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray_text"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"
+                app:met_baseColor="@color/pressed_blue"
+                app:met_primaryColor="@color/blue" />
+        </LinearLayout>
+        <!--<ImageView-->
+        <!--android:background="@color/blue"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp" />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/repassword1" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/reregpsw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:background="@null"
+                android:gravity="left"
+                android:hint="请确认您的密码"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray_text"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"
+                app:met_baseColor="@color/pressed_blue"
+                app:met_primaryColor="@color/blue" />
+        </LinearLayout>
+        <!--<ImageView-->
+        <!--android:background="@color/blue"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp" />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/email1" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/regemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:background="@null"
+                android:gravity="left"
+                android:hint="请输入您的邮箱"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray_text"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"
+                app:met_baseColor="@color/pressed_blue"
+                app:met_primaryColor="@color/blue" />
+        </LinearLayout>
+        <!--<ImageView-->
+        <!--android:background="@color/blue"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp" />-->
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_edit"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/regbutton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btnshape"
+            android:text="注册"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,139 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/note_relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    tools:context="com.lfk.drawapictiure.Activity.NoteActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/note_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue" />
+
+    <RelativeLayout
+        android:id="@+id/note_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue_button_select"
+        android:paddingBottom="12dp"
+        android:paddingRight="10dp"
+        android:paddingTop="12dp">
+
+        <ImageView
+            android:id="@+id/note_back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="4dp"
+            android:padding="4dp"
+            android:src="@mipmap/iconfont_fanhui" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@+id/note_back"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/note_markdown"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:layout_toLeftOf="@+id/note_menu"
+        android:background="@drawable/blue_button_select"
+        android:padding="8dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_markdown" />
+
+    <ImageButton
+        android:id="@+id/note_menu"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/blue_button_select"
+        android:padding="8dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/iconfont_more" />
+
+    <LinearLayout
+        android:id="@+id/note_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/note_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/note_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="18dp"
+            android:layout_toRightOf="@+id/note_first"
+            android:text=""
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/note_cre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="18dp"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:autoText="true" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/note_edit"
+        android:layout_below="@+id/note_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="left"
+        android:hint="请输入文字..."
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        app:met_textColor="#0056d3"
+        app:met_baseColor="@color/white"
+        android:autoLink="all" />
+
+    <ScrollView
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:layout_below="@+id/note_toolbar">
+        <TextView
+            android:id="@+id/markdown"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:padding="16dp" />
+    </ScrollView>
+
+</RelativeLayout>

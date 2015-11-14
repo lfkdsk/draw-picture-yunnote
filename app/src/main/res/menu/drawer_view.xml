@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/open_bluetooth"
+            android:icon="@drawable/iconfont_lanya"
+            android:title="开启蓝牙同步演示"
+            />
+        <item
+            android:id="@+id/open_code"
+            android:icon="@drawable/iconfont_code"
+            android:title="开启代码编辑"/>
+        <item
+            android:id="@+id/only_wifi"
+            android:icon="@drawable/iconfont_wifi"
+            android:title="仅Wi-Fi下同步"/>
+    </group>
+    <group>
+        <item
+            android:id="@+id/exchange_user"
+            android:icon="@drawable/icon_shift"
+            android:title="用户切换" />
+        <item
+            android:id="@+id/menu_clear"
+            android:icon="@drawable/iconfont_lajiqinglix"
+            android:title="清理缓存" />
+        <item
+            android:id="@+id/menu_fankui"
+            android:icon="@drawable/iconfont_wentifankui"
+            android:title="问题反馈" />
+        <item
+            android:id="@+id/about_us"
+            android:icon="@drawable/iconfont_guanyujiubo"
+            android:title="关于我们"/>
+        <item
+            android:id="@+id/menu_finish"
+            android:icon="@drawable/iconfont_power"
+            android:title="退出应用"/>
+    </group>
+
+</menu>

@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/main_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blue" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/paint_player_it"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/blue_button_select"
+                android:padding="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/iconfont_player" />
+
+            <ImageButton
+                android:id="@+id/paint_paint_it"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/blue_button_select"
+                android:padding="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/iconfont_modify" />
+
+            <ImageButton
+                android:id="@+id/paint_share_it"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/blue_button_select"
+                android:padding="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_share" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue_button_select"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp">
+
+        <ImageView
+            android:id="@+id/main_back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="4dp"
+            android:padding="4dp"
+            android:src="@mipmap/iconfont_fanhui" />
+
+        <TextView
+            android:id="@+id/paint_name"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@+id/main_back"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="文件名"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+
+    <com.lfk.drawapictiure.View.PaintView
+        android:id="@+id/paint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_linear"
+        android:focusable="true" />
+</RelativeLayout>

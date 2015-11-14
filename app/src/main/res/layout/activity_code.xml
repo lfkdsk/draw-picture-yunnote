@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false"
+    tools:context="com.lfk.drawapictiure.Activity.CodeActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/code_toolbar"
+        android:background="@color/black"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+    <com.lfk.drawapictiure.View.CodeView.CodeView
+        android:id="@+id/mcodeview"
+        android:layout_below="@+id/code_toolbar"
+        android:layerType="hardware"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <ImageView
+        android:id="@+id/code_back"
+        android:padding="4dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginLeft="8dp"
+        android:src="@mipmap/iconfont_fanhui"
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
+    <TextView
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_marginTop="16dp"
+        android:text=""
+        android:layout_centerHorizontal="true"
+        android:id="@+id/code_first"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/code_edit"
+        android:layout_marginTop="2dp"
+        android:layout_alignParentRight="true"
+        android:padding="16dp"
+        android:background="#00000000"
+        android:text="编辑"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

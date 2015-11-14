@@ -1,0 +1,97 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@color/white"
+    tools:context="com.lfk.drawapictiure.Activity.ChooseActivity">
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:id="@+id/choose_logo"
+        android:src="@drawable/sign_in_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="72dp" />
+    <LinearLayout
+        android:id="@+id/choose_title"
+        android:layout_marginBottom="160dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center"
+            android:background="@color/gray_text"
+            android:layout_width="80dp"
+            android:layout_height="1dp" />
+        <TextView
+            android:layout_marginLeft="4dp"
+            android:text="选择登陆方式"
+            android:textSize="16sp"
+            android:textColor="@color/gray_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_marginLeft="4dp"
+            android:layout_gravity="center"
+            android:background="@color/gray_text"
+            android:layout_width="80dp"
+            android:layout_height="1dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/choose_buttons"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="52dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:background="@drawable/choose_button_select"
+            android:padding="8dp"
+            android:layout_weight="1"
+            android:id="@+id/choose_desktop"
+            android:orientation="vertical"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/sign_in1"
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
+            <TextView
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/gray_text"
+                android:text="本地试用"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/choose_login"
+            android:background="@drawable/choose_button_select"
+            android:padding="8dp"
+            android:layout_marginLeft="32dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/sign_in2"
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
+            <TextView
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/gray_text"
+                android:text="网络登录"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

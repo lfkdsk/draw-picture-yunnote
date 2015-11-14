@@ -1,0 +1,146 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false"
+    tools:context="com.lfk.drawapictiure.Activity.LoginActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/login_toolbar"
+        android:background="@color/blue"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+    <RelativeLayout
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingRight="10dp"
+        android:id="@+id/login_back_button"
+        android:background="@drawable/blue_button_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/login_back"
+            android:src="@mipmap/iconfont_fanhui"
+            android:padding="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp" />
+        <TextView
+            android:layout_marginTop="6dp"
+            android:text="返回"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_toRightOf="@+id/login_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:text="云手帐"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/login_edit"
+        android:layout_below="@+id/login_toolbar"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:padding="4dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/account1"
+                android:layout_width="32dp"
+                android:layout_height="32dp" />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:gravity="left"
+                android:singleLine="true"
+                app:met_baseColor="@color/pressed_blue"
+                app:met_primaryColor="@color/blue"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:textCursorDrawable="@null"
+                android:hint="请输入用户名"
+                android:inputType="textPersonName"
+                android:textColorHint="@color/gray_text"
+                android:layout_marginLeft="4dp"
+                android:id="@+id/name"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <!--<ImageView-->
+            <!--android:background="@color/blue"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp" />-->
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/password1"
+                android:layout_width="32dp"
+                android:layout_height="32dp" />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:gravity="left"
+                android:singleLine="true"
+                app:met_baseColor="@color/pressed_blue"
+                app:met_primaryColor="@color/blue"
+                android:inputType="textPassword"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:textCursorDrawable="@null"
+                android:layout_marginLeft="4dp"
+                android:id="@+id/psw"
+                android:hint="请输入密码"
+                android:textSize="16sp"
+                android:textColorHint="@color/gray_text"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <!--<ImageView-->
+            <!--android:background="@color/blue"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp" />-->
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/login_edit"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:id="@+id/login"
+            android:background="@drawable/btnshape"
+            android:text="登陆"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+        <Button
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"
+            android:background="@drawable/btnshape"
+            android:textColor="@color/white"
+            android:id="@+id/regist"
+            android:text="注册"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+    </LinearLayout>
+
+</RelativeLayout>
