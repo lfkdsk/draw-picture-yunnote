@@ -124,12 +124,10 @@
         android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:background="@color/white"
         android:layout_below="@+id/note_toolbar">
         <TextView
             android:id="@+id/markdown"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"

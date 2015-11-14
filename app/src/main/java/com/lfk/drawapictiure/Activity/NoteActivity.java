@@ -1,7 +1,6 @@
 package com.lfk.drawapictiure.Activity;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -11,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -21,12 +19,15 @@ import android.widget.Toast;
 import com.lfk.drawapictiure.Datebase.SQLHelper;
 import com.lfk.drawapictiure.Info.UserInfo;
 import com.lfk.drawapictiure.R;
+import com.lfk.drawapictiure.Tools.PdfMaker;
 import com.lfk.drawapictiure.Tools.SPUtils;
 import com.lfk.drawapictiure.View.MarkDown.MDReader;
+import com.lowagie.text.DocumentException;
 import com.mingle.entity.MenuEntity;
 import com.mingle.sweetpick.DimEffect;
 import com.mingle.sweetpick.RecyclerViewDelegate;
 import com.mingle.sweetpick.SweetSheet;
+import com.orhanobut.logger.Logger;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -47,7 +48,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     private static SQLiteDatabase database;
     private static String oldstring;
     private TextView mMarkDownView;
-    private MDReader markdown;
+    private MDReader markdown = null;
     private boolean MARKDOWN = false;
     private SweetSheet mSweetSheet;
     private ScrollView mRootView;
@@ -85,6 +86,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         mMarkDownView = (TextView) findViewById(R.id.markdown);
         mMarkDownView.setVisibility(View.INVISIBLE);
         mRootView = (ScrollView) findViewById(R.id.root_view);
+        mRootView.setVisibility(View.GONE);
+        mMarkDownView.setVisibility(View.GONE);
         initSweetSheet();
     }
 
@@ -93,10 +96,12 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         MenuEntity share_menuEntity = new MenuEntity("分享便签", R.drawable.iconfont_share, "share");
         MenuEntity text_menuEntity = new MenuEntity("保存为文本", R.drawable.iconfont_txt, "txt");
         MenuEntity jpg_menuEntity = new MenuEntity("保存为图片", R.drawable.iconfont_jpg, "pic");
-        MenuEntity md_menuEntity = new MenuEntity("保存为MarkDown文件", R.drawable.iconfont_jpg, "md");
+        MenuEntity md_menuEntity = new MenuEntity("保存为MarkDown文件", R.drawable.iconfont_md, "md");
+        MenuEntity pdf_menuEntity = new MenuEntity("导出为pdf文件", R.drawable.iconfont_pdf, "pdf");
         menuEntities.add(text_menuEntity);
         menuEntities.add(jpg_menuEntity);
         menuEntities.add(md_menuEntity);
+        menuEntities.add(pdf_menuEntity);
         menuEntities.add(share_menuEntity);
         mSweetSheet = new SweetSheet((RelativeLayout) findViewById(R.id.note_relative));
         mSweetSheet.setMenuList(menuEntities);
@@ -122,6 +127,9 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
                 case "md":
                     saveAsMarkdown();
                     break;
+                case "pdf":
+                    saveAsPdf();
+                    break;
             }
             return true;
         });
@@ -131,6 +139,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         if (!UserInfo.TextPath.exists()) {
             UserInfo.TextPath.mkdirs();
         }
+        if (markdown == null)
+            markdown = new MDReader(editText.getText().toString());
         String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".txt";
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filepath), "UTF-8"));
@@ -142,28 +152,51 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
     }
 
-    public void saveAsBitmap() {
+    public void saveAsPdf() {
+        if (!UserInfo.TextPath.exists()) {
+            UserInfo.TextPath.mkdirs();
+        }
+        String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".pdf";
+        if (!MARKDOWN) {
+            markdown = new MDReader(editText.getText().toString());
+            mMarkDownView.setTextKeepState(markdown.getFormattedContent(), TextView.BufferType.SPANNABLE);
+            editText.setVisibility(View.GONE);
+            mRootView.setVisibility(View.VISIBLE);
+            mMarkDownView.setVisibility(View.VISIBLE);
+            oldstring = editText.getText().toString();
+            ((ImageView) findViewById(R.id.note_markdown)).
+                    setImageDrawable(getResources().getDrawable(R.drawable.icon_markdown1));
+            MARKDOWN = true;
+        }
+        try {
+            PdfMaker.makeIt(this, filepath, createBitmap(mRootView));
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
+    }
 
+    public void saveAsBitmap() {
         if (!UserInfo.TextPath.exists()) {
             UserInfo.TextPath.mkdirs();
         }
 
         if (!MARKDOWN) {
-            markdown = new MDReader(editText.getText().toString());
+            if (markdown == null)
+                markdown = new MDReader(editText.getText().toString());
             mMarkDownView.setTextKeepState(markdown.getFormattedContent(), TextView.BufferType.SPANNABLE);
-            editText.setVisibility(View.INVISIBLE);
+            mRootView.setVisibility(View.VISIBLE);
             mMarkDownView.setVisibility(View.VISIBLE);
+            editText.setVisibility(View.GONE);
             oldstring = editText.getText().toString();
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
             ((ImageView) findViewById(R.id.note_markdown)).
                     setImageDrawable(getResources().getDrawable(R.drawable.icon_markdown1));
             MARKDOWN = true;
+            Logger.e("mark_change");
         }
         String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".jpg";
         try {
             FileOutputStream stream = new FileOutputStream(filepath);
-
             Bitmap bitmap = createBitmap(mRootView);
             if (bitmap != null) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -179,7 +212,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         if (!UserInfo.TextPath.exists()) {
             UserInfo.TextPath.mkdirs();
         }
-
+        if (markdown == null)
+            markdown = new MDReader(editText.getText().toString());
         String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".md";
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filepath), "UTF-8"));
@@ -278,13 +312,6 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
                     finishTheActivity();
                 }
                 break;
-//            case R.id.note_share:
-//                Intent sendIntent = new Intent();
-//                sendIntent.setAction(Intent.ACTION_SEND);
-//                sendIntent.putExtra(Intent.EXTRA_TEXT, editText.getText().toString());
-//                sendIntent.setType("text/plain");
-//                startActivity(Intent.createChooser(sendIntent, "发送便签"));
-//                break;
             case R.id.note_menu:
                 if (mSweetSheet.isShow()) {
                     mSweetSheet.dismiss();
