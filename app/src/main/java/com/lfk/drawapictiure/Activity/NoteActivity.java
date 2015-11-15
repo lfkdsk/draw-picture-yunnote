@@ -167,11 +167,13 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         if (!MARKDOWN) {
             markDown();
         }
-        try {
-            PdfMaker.makeIt(this, filepath, createBitmap(mRootView));
-        } catch (DocumentException | IOException e) {
-            e.printStackTrace();
-        }
+        new Thread(() -> {
+            try {
+                PdfMaker.makeIt(NoteActivity.this, filepath, createBitmap(mRootView));
+            } catch (DocumentException | IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
         Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
     }
 

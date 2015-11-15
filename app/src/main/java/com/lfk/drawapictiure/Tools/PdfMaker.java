@@ -21,7 +21,7 @@ public class PdfMaker {
     public static void makeIt(Context context, String filename, Bitmap bitmap) throws DocumentException, MalformedURLException, IOException {
         File pdf = new File(filename);
         Document document = new Document();
-        PdfWriter.getInstance(document,
+        PdfWriter writer = PdfWriter.getInstance(document,
                 new FileOutputStream(pdf));
         document.open();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -29,7 +29,14 @@ public class PdfMaker {
                 100 /* Ratio */, stream);
         Image img = Image.getInstance(stream.toByteArray());
         img.setAbsolutePosition(0, 0);
+        img.scaleAbsolute(bitmap.getWidth(),bitmap.getHeight());
         document.add(img);
 
+//        PdfContentByte cb = writer.getDirectContent();
+//        cb.setRGBColorFill(0xFF, 0xFF, 0xFF);
+//        cb.circle(250.0f, 500.0f, 50.0f);
+//        cb.fill();
+//        cb.sanityCheck();
+        document.close();
     }
 }
