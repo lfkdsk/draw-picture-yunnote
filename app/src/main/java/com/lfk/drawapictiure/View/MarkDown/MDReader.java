@@ -8,7 +8,6 @@ import android.util.Log;
 import com.lfk.drawapictiure.View.MarkDown.parser.BoldParser;
 import com.lfk.drawapictiure.View.MarkDown.parser.CenterParser;
 import com.lfk.drawapictiure.View.MarkDown.parser.HeaderParser;
-import com.lfk.drawapictiure.View.MarkDown.parser.ItalicParser;
 import com.lfk.drawapictiure.View.MarkDown.parser.OrderListParser;
 import com.lfk.drawapictiure.View.MarkDown.parser.QuoteParser;
 import com.lfk.drawapictiure.View.MarkDown.parser.UnOrderListParser;
@@ -30,7 +29,7 @@ public class MDReader {
         mMDParsers.add(new UnOrderListParser());
         mMDParsers.add(new BoldParser());
         mMDParsers.add(new CenterParser());
-        mMDParsers.add(new ItalicParser());
+//        mMDParsers.add(new ItalicParser());
     }
 
     public MDReader(String content) {

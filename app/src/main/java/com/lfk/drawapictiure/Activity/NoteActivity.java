@@ -1,15 +1,20 @@
 package com.lfk.drawapictiure.Activity;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -39,8 +44,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-//import android.util.Log;
-//import com.orhanobut.logger.Logger;
 
 public class NoteActivity extends AppCompatActivity implements View.OnClickListener {
     private MaterialEditText editText;
@@ -52,6 +55,9 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     private boolean MARKDOWN = false;
     private SweetSheet mSweetSheet;
     private ScrollView mRootView;
+    private ProgressDialog progressDialog = null;
+    private boolean firstInto = true;
+    private SpannableStringBuilder content = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,12 +98,23 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         oldstring = getIntent().getStringExtra("content");
         if (oldstring != null) {
             editText.setText(oldstring);
-            markDown();
         }
         initSweetSheet();
         database = SQLiteDatabase.openOrCreateDatabase(SQLHelper.NAME, null);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (firstInto && !THEFIRSTTIME) {
+            firstInto = false;
+            markDown();
+        }
+    }
+
+    /**
+     * 菜单
+     */
     private void initSweetSheet() {
         ArrayList<MenuEntity> menuEntities = new ArrayList<>();
         MenuEntity share_menuEntity = new MenuEntity("分享便签", R.drawable.iconfont_share, "share");
@@ -142,13 +159,16 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * 导出(不包含格式)
+     */
     public void saveAsRawContent() {
         if (!UserInfo.TextPath.exists()) {
             UserInfo.TextPath.mkdirs();
         }
         if (markdown == null)
             markdown = new MDReader(editText.getText().toString());
-        String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".txt";
+        String filepath = UserInfo.TextPath.getPath() + "/" + System.currentTimeMillis() + ".txt";
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filepath), "UTF-8"));
             writer.write(markdown.getRawContent());
@@ -159,11 +179,14 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * 导出(pdf)
+     */
     public void saveAsPdf() {
         if (!UserInfo.TextPath.exists()) {
             UserInfo.TextPath.mkdirs();
         }
-        String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".pdf";
+        String filepath = UserInfo.TextPath.getPath() + "/" + System.currentTimeMillis() + ".pdf";
         if (!MARKDOWN) {
             markDown();
         }
@@ -177,6 +200,9 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * 导出(图片,大小为至少一个屏幕大小)
+     */
     public void saveAsBitmap() {
         if (!UserInfo.TextPath.exists()) {
             UserInfo.TextPath.mkdirs();
@@ -184,7 +210,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         if (!MARKDOWN) {
             markDown();
         }
-        String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".jpg";
+        String filepath = UserInfo.TextPath.getPath() + "/" + System.currentTimeMillis() + ".jpg";
         if (MARKDOWN) {
             try {
                 FileOutputStream stream = new FileOutputStream(filepath);
@@ -200,13 +226,16 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 导出MarkDown文件
+     */
     public void saveAsMarkdown() {
         if (!UserInfo.TextPath.exists()) {
             UserInfo.TextPath.mkdirs();
         }
         if (markdown == null)
             markdown = new MDReader(editText.getText().toString());
-        String filepath = UserInfo.PATH + "/txt/" + System.currentTimeMillis() + ".md";
+        String filepath = UserInfo.TextPath.getPath() + "/" + System.currentTimeMillis() + ".md";
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filepath), "UTF-8"));
             writer.write(markdown.getContent());
@@ -217,7 +246,13 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
     }
 
-    public static Bitmap createBitmap(ScrollView v) {
+    /**
+     * 截取ScrollView
+     *
+     * @param v
+     * @return
+     */
+    public Bitmap createBitmap(ScrollView v) {
         int width = 0, height = 0;
         for (int i = 0; i < v.getChildCount(); i++) {
             width += v.getChildAt(i).getWidth();
@@ -228,12 +263,18 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
             Logger.e("未检测到 " + "h: " + height + "w: " + width);
             return null;
         }
+        int h = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getHeight();
+        if (height < h)
+            height = h;
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         v.draw(canvas);
         return bitmap;
     }
 
+    /**
+     * 结束Activity,包含处理数据库,不包含上传
+     */
     private void finishTheActivity() {
         final ContentValues values = new ContentValues();
         final Date d = new Date();
@@ -301,17 +342,24 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 切换MarkDown状态
+     */
     private void markDown() {
+        progressDialog = ProgressDialog.show(this, "请等待", "正在转码...", true);
         if (MARKDOWN) {
+            markdown = new MDReader(editText.getText().toString());
             mMarkDownView.setVisibility(View.INVISIBLE);
             mRootView.setVisibility(View.INVISIBLE);
             editText.setVisibility(View.VISIBLE);
             MARKDOWN = false;
             ((ImageView) findViewById(R.id.note_markdown)).
                     setImageDrawable(getResources().getDrawable(R.drawable.icon_markdown));
+            progressDialog.dismiss();
         } else {
             markdown = new MDReader(editText.getText().toString());
             mMarkDownView.setTextKeepState(markdown.getFormattedContent(), TextView.BufferType.SPANNABLE);
+            progressDialog.dismiss();
             editText.setVisibility(View.INVISIBLE);
             mRootView.setVisibility(View.VISIBLE);
             mMarkDownView.setVisibility(View.VISIBLE);
@@ -321,6 +369,17 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
             MARKDOWN = true;
         }
     }
+
+    private android.os.Handler handler = new android.os.Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+//            switch (msg.what){
+
+
+//            }
+        }
+    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

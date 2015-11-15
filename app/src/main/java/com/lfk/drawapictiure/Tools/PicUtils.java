@@ -22,15 +22,19 @@ import android.graphics.drawable.Drawable;
 import android.util.Base64;
 import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 图片处理工具类
+ *
  * @author liufengkai
  */
 public class PicUtils {
@@ -286,8 +290,7 @@ public class PicUtils {
             // 解析得到图片
             bitmap = BitmapFactory.decodeStream(is);
             is.close();// 关闭数据流
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -298,8 +301,7 @@ public class PicUtils {
      * 从资源中获取Bitmap
      *
      * @param context
-     * @param resid
-     *            例如这样：R.drawable.icon
+     * @param resid   例如这样：R.drawable.icon
      * @return
      */
     public static Bitmap getBitmapFromResources(Context context, int resid) {
@@ -329,8 +331,7 @@ public class PicUtils {
     public Bitmap Bytes2Bimap(byte[] bytes) {
         if (bytes.length != 0) {
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -455,5 +456,42 @@ public class PicUtils {
         canvas.drawRect(0, h, w, bitmapWithReflection.getHeight() + reflectionGap, paint);
 
         return bitmapWithReflection;
+    }
+
+    public static class ImagePiece {
+        public Bitmap bitmap = null;
+        public int index = 0;
+
+        public ImagePiece(Bitmap bitmap) {
+            this.bitmap = bitmap;
+            this.index = 0;
+        }
+
+        public ImagePiece(Bitmap bitmap, int index) {
+            this.bitmap = bitmap;
+            this.index = index;
+        }
+    }
+
+    public static List<ImagePiece> spilt(Context context, Bitmap bitmap) {
+        int screenHeight = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE))
+                .getDefaultDisplay().getHeight();
+        List<ImagePiece> list = new ArrayList<>();
+        if (bitmap.getHeight() <= screenHeight) {
+            list.add(new ImagePiece(bitmap));
+            return list;
+        }
+
+        int pageNum = Math.round(bitmap.getHeight() * 1.0f / screenHeight);
+        for (int i = 0; i < pageNum; i++) {
+            int xValue = 0;
+            int yValue = i * screenHeight + DisplayUtils.dp2px(context, 16);
+            list.add(new ImagePiece(
+                    Bitmap.createBitmap(bitmap, xValue, yValue,
+                            bitmap.getWidth(), screenHeight),
+                    i));
+        }
+
+        return list;
     }
 }

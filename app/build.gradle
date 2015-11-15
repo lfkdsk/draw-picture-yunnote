@@ -53,4 +53,5 @@ dependencies {
     compile 'com.orhanobut:logger:1.3'
     compile project(':sweetsheet')
     compile files('libs/droidText.0.4.jar')
+    compile 'com.orhanobut:dialogplus:1.10@aar'
 }

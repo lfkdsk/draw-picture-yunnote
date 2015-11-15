@@ -59,7 +59,7 @@ public class UserInfo {
 
     public static final String PATH = Environment.getExternalStorageDirectory().getPath() + "/DrawAPicture";
 
-    public static final File TextPath = new File(PATH + "/txt");
+    public static final File TextPath = new File(PATH + "/document");
 
     public static final File PicPath = new File(PATH + "/picture");
 
