@@ -4,13 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/card_margin"
-    android:background="@color/white"
     card_view:cardCornerRadius="2dp"
     card_view:cardElevation="4dp">
 
     <RelativeLayout
         style="@style/Widget.CardContent"
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -50,7 +48,7 @@
             android:layout_height="1dp"
             android:layout_below="@+id/paint_time"
             android:layout_marginTop="4dp"
-            android:background="@color/black" />
+            android:background="@color/gray" />
 
         <TextView
             android:id="@+id/paint_root"

@@ -8,11 +8,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-//import android.util.Log;
+import android.util.Log;
 
 import com.lfk.drawapictiure.Activity.MenuActivity;
 import com.lfk.drawapictiure.Info.UserInfo;
-//import com.orhanobut.logger.Logger;
+import com.orhanobut.logger.Logger;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,6 +30,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+
+//import android.util.Log;
+//import com.orhanobut.logger.Logger;
 
 public class HttpUtils {
 
@@ -142,7 +145,13 @@ public class HttpUtils {
         }).start();
     }
 
-    public static void GetFromHttp(String url) {
+    /**
+     * 接受返回数据
+     *
+     * @param url
+     * @param handler
+     */
+    public static void GetFromHttp(String url, Handler handler) {
 //        Logger.e("url", url);
         new Thread(() -> {
             HttpClient httpCient = new DefaultHttpClient();
@@ -152,7 +161,11 @@ public class HttpUtils {
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     HttpEntity entity = httpResponse.getEntity();
                     String response = EntityUtils.toString(entity, "utf-8");
-//                    Log.e("HttpGet_response", response);
+                    Log.e("HttpGet_response", response);
+                    Message message = handler.obtainMessage();
+                    message.obj = response;
+                    message.what = UserInfo.GET_BACK;
+                    handler.sendMessage(message);
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block
@@ -221,7 +234,7 @@ public class HttpUtils {
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         HttpEntity entity = httpResponse.getEntity();
                         String response = EntityUtils.toString(entity, "utf-8");
-//                        Logger.e("HttpGet_response", response);
+                        Logger.e("HttpGet_response", response);
                         if (response.equals("[]")) {
                             Message message = new Message();
                             message.what = UserInfo.EMPTY;

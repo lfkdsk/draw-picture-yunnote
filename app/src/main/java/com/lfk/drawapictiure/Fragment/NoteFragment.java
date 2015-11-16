@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.Toast;
 
 import com.lfk.drawapictiure.Activity.NoteActivity;
 import com.lfk.drawapictiure.Adapter.NodeLayoutAdapter;
@@ -49,7 +50,8 @@ public class NoteFragment extends android.support.v4.app.Fragment {
     private static SQLiteDatabase database;
     private String token;
     private SwipeRefreshLayout swipeLayout;
-
+    private View wrapper;
+    private Snackbar snackbar;
 
     public static NoteFragment newInstance(SQLiteDatabase database) {
         return new NoteFragment(database);
@@ -66,7 +68,7 @@ public class NoteFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View wrapper = inflater.inflate(R.layout.fragment_note, container, false);
+        wrapper = inflater.inflate(R.layout.fragment_note, container, false);
         mRecyclerView = (RecyclerView) wrapper.findViewById(R.id.note_recycle_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -180,17 +182,37 @@ public class NoteFragment extends android.support.v4.app.Fragment {
                     swipeLayout.setRefreshing(false);
                     break;
                 case UserInfo.ONLY_WIFI_NOT_CONNET:
-                    Toast.makeText(getActivity(), "仅在Wi-Fi下更新", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "仅在Wi-Fi下更新", Toast.LENGTH_SHORT).show();
+                    snackMake(wrapper, "仅在Wi-Fi下更新");
                     swipeLayout.setRefreshing(false);
                     break;
                 case UserInfo.CONTENT_ERROR:
-                    Toast.makeText(getActivity(), "连接错误", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "连接错误", Toast.LENGTH_SHORT).show();
+                    snackMake(wrapper, "连接错误");
                     swipeLayout.setRefreshing(false);
+                    break;
+                case UserInfo.GET_BACK:
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String type = object.getString("message");
+                        if (type.equals("del file ok")) {
+                            snackMake(wrapper, "删除成功");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }
     };
 
+    private void snackMake(View view, String text) {
+        snackbar = Snackbar.make(view, text, Snackbar.LENGTH_SHORT);
+        snackbar.setActionTextColor(Color.WHITE);
+        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+        ve.setBackgroundColor(getResources().getColor(R.color.blue));
+        snackbar.show();
+    }
 
     private void deleteFromDataBase(String name) {
         database.execSQL("delete from note"
@@ -213,9 +235,10 @@ public class NoteFragment extends android.support.v4.app.Fragment {
 //                    list.add(id);
 ////                    Log.e("notefragment", "" + id);
 //                    SPUtils.put(getActivity(),"delete_list",MessageGZIP.ListToJson(list));
-                    Toast.makeText(getActivity(), "非联网状态下无法删除云端", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "非联网状态下无法删除云端", Toast.LENGTH_SHORT).show();
+                    snackMake(wrapper, "非联网状态下无法删除云端");
                 }
-                HttpUtils.GetFromHttp(UserInfo.url + UserInfo.editNote + "/" + id + "/del?token=" + token);
+                HttpUtils.GetFromHttp(UserInfo.url + UserInfo.editNote + "/" + id + "/del?token=" + token, handler);
 //                Log.e("delete url", UserInfo.url + UserInfo.editNote + "/" + id + "/del?token="+token);
             } catch (CursorIndexOutOfBoundsException e) {
 //                Log.e("internet","删除失败");

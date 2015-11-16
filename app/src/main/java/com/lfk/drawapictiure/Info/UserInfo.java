@@ -82,6 +82,8 @@ public class UserInfo {
 
     public static final int EMPTY = 0;
 
+    public static final int GET_BACK = 200;
+
     // DataBase
 
     public static int CREATE_TABLE_SUCCESS;

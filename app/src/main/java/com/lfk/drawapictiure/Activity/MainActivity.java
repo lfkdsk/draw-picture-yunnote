@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
             if (paint_name.equals("新建")) {
                 THEFIRSTTIME = true;
                 setMenu();
-                Logger.e("new it");
+//                Logger.e("new it");
             } else {
                 THEFIRSTTIME = false;
                 Paintname = paint_name;
@@ -404,15 +404,17 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                             mMaterialDialog.dismiss();
                             String content = paintView.PathNodeToJsonString(pathNode, "");
                             String pic = paintView.PathNodeToBitmapToString();
-                            values.put("_name", editText.getText().toString());
-                            values.put("_time", format.format(d));
-                            values.put("_content", content);
-                            values.put("_username", (String) SPUtils.get(MainActivity.this, "username", UserInfo.PUBLIC_ID));
-                            values.put("_pic", pic);
-                            values.put("_type", 0);
-                            database.insert("note", null, values);
-                            database.close();
-                            UserInfo.Editabled = false;
+                            new Thread(() -> {
+                                values.put("_name", editText.getText().toString());
+                                values.put("_time", format.format(d));
+                                values.put("_content", content);
+                                values.put("_username", (String) SPUtils.get(MainActivity.this, "username", UserInfo.PUBLIC_ID));
+                                values.put("_pic", pic);
+                                values.put("_type", 0);
+                                database.insert("note", null, values);
+                                database.close();
+                                UserInfo.Editabled = false;
+                            }).start();
                             getResultIntent(content
                                     , editText.getText().toString()
                                     , pic, true);
