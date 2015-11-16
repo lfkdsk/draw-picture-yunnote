@@ -22,13 +22,13 @@ import java.io.File;
 
 import me.drakeet.materialdialog.MaterialDialog;
 
-public class CodeActivity extends AppCompatActivity implements View.OnClickListener{
+public class CodeActivity extends AppCompatActivity implements View.OnClickListener {
     private CodeView codeView;
     private MaterialDialog materialDialog;
     private SQLiteDatabase database;
     private boolean FIRST_OPEN_FILE = true;
     private String filename;
-    private String Mycontent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,14 +39,14 @@ public class CodeActivity extends AppCompatActivity implements View.OnClickListe
         tintManager.setNavigationBarTintEnabled(true);
         tintManager.setTintColor(getResources().getColor(R.color.black));
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.code_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.code_toolbar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.code_gray));
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        codeView = (CodeView)findViewById(R.id.mcodeview);
+        codeView = (CodeView) findViewById(R.id.mcodeview);
         findViewById(R.id.code_back).setOnClickListener(this);
-        database = SQLiteDatabase.openOrCreateDatabase(SQLHelper.NAME,null);
+        database = SQLiteDatabase.openOrCreateDatabase(SQLHelper.NAME, null);
     }
 
     @Override
@@ -54,25 +54,25 @@ public class CodeActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         File dir = null;
         String stringUri = getIntent().getStringExtra("code");
-        if(stringUri != null && getSupportActionBar() != null){
+        if (stringUri != null && getSupportActionBar() != null) {
             FIRST_OPEN_FILE = false;
             codeView.setStringSource(stringUri);
-            ((TextView)findViewById(R.id.code_first)).setText(getIntent().getStringExtra("title"));
-        }else {
+            ((TextView) findViewById(R.id.code_first)).setText(getIntent().getStringExtra("title"));
+        } else {
             Uri fileUri = getIntent().getData();
             if (fileUri != null) {
                 dir = new File(fileUri.getPath());
             }
 
-            if (dir != null && getSupportActionBar()  != null) {
+            if (dir != null && getSupportActionBar() != null) {
                 FIRST_OPEN_FILE = true;
                 codeView.setDirSource(dir);
                 filename = dir.getName();
-                ((TextView)findViewById(R.id.code_first)).setText(filename);
+                ((TextView) findViewById(R.id.code_first)).setText(filename);
             } else
                 finish();
         }
-        final TextView textView = (TextView)findViewById(R.id.code_edit);
+        final TextView textView = (TextView) findViewById(R.id.code_edit);
         textView.setOnClickListener(view -> {
             if (!codeView.isEditable()) {
                 textView.setText("完成");
@@ -84,9 +84,9 @@ public class CodeActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void finishTheActivity(){
+    private void finishTheActivity() {
 //        Log.e("first_open_file", "" + FIRST_OPEN_FILE);
-        if(FIRST_OPEN_FILE) {
+        if (FIRST_OPEN_FILE) {
             final ContentValues values = new ContentValues();
             materialDialog = new MaterialDialog(this)
                     .setMessage("是否保存？")
@@ -98,15 +98,15 @@ public class CodeActivity extends AppCompatActivity implements View.OnClickListe
                         database.insert("note", null, values);
                         database.close();
                         materialDialog.dismiss();
-                        setToIntent(filename , codeView.getContent(), "");
+                        setToIntent(filename, codeView.getContent(), "");
                         finish();
                     })
                     .setNegativeButton("取消", view -> {
                         materialDialog.dismiss();
                     });
             materialDialog.show();
-        }else {
-            if(getIntent().getStringExtra("code").length() != codeView.getContent().length()) {
+        } else {
+            if (getIntent().getStringExtra("code").length() != codeView.getContent().length()) {
                 database.execSQL("update note set _content=" + "\""
                         + codeView.getContent() + "\"" + " where _name ="
                         + "\"" + getIntent().getStringExtra("title") + "\""
@@ -115,25 +115,25 @@ public class CodeActivity extends AppCompatActivity implements View.OnClickListe
 
                 database.close();
                 setToIntent(getIntent().getStringExtra("title"), codeView.getContent(), "");
-            }else {
+            } else {
                 finish();
             }
         }
     }
 
-    private void setToIntent(String name ,String content,String cache){
-        Intent intent = new Intent(CodeActivity.this,MenuActivity.class);
-        intent.putExtra("name",name);
-        intent.putExtra("content",content);
-        intent.putExtra("cache",cache);
-        intent.putExtra("type",2);
+    private void setToIntent(String name, String content, String cache) {
+        Intent intent = new Intent(CodeActivity.this, MenuActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("content", content);
+        intent.putExtra("cache", cache);
+        intent.putExtra("type", 2);
         setResult(RESULT_OK, intent);
         finish();
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.code_back:
                 finishTheActivity();
                 break;
@@ -142,7 +142,7 @@ public class CodeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode){
+        switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 finishTheActivity();
                 break;

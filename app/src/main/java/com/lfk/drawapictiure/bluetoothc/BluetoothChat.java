@@ -106,7 +106,7 @@ public class BluetoothChat extends AppCompatActivity{
         toolbar.setSubtitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-//        pathNode = (PathNode)getApplication();
+        pathNode = (PathNode)getApplication();
         paintView = (PaintView)findViewById(R.id.paint);
         paintView.setIsRecordPath(true, pathNode);
         paintView.setOnPathListener(new OnPathListener() {

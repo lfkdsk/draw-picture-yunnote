@@ -49,10 +49,10 @@
         </activity>
         <activity
             android:name=".bluetoothc.BluetoothChat"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
         <activity
             android:name=".bluetoothc.DeviceListActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
     </application>
 
 </manifest>
