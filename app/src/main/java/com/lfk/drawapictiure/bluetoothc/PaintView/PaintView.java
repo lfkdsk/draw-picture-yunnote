@@ -787,6 +787,4 @@ public class PaintView extends View {
             }
         }
     }
-
-
 }

@@ -1,4 +1,5 @@
 package com.lfk.drawapictiure.Activity;
+
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,8 +7,10 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -17,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lfk.drawapictiure.Datebase.SQLHelper;
 import com.lfk.drawapictiure.Info.UserInfo;
@@ -55,6 +57,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     private ScrollView mRootView;
     private ProgressDialog progressDialog = null;
     private boolean firstInto = true;
+    private Snackbar snackbar;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         tintManager.setNavigationBarTintEnabled(true);
         tintManager.setTintColor(getResources().getColor(R.color.darkblue));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.note_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.note_toolbar);
         toolbar.setTitle("");
 
         String build = getIntent().getStringExtra("build");
@@ -157,6 +161,14 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void snackMake(View view, String text) {
+        snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG);
+        snackbar.setActionTextColor(Color.WHITE);
+        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+        ve.setBackgroundColor(getResources().getColor(R.color.blue));
+        snackbar.show();
+    }
+
     /**
      * 导出(不包含格式)
      */
@@ -174,7 +186,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
+        snackMake(toolbar, "成功保存到:" + filepath);
+//        Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -195,7 +208,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }).start();
-        Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
+        snackMake(toolbar, "成功保存到:" + filepath);
+//        Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -215,7 +229,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
                 Bitmap bitmap = createBitmap(mRootView);
                 if (bitmap != null) {
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
+                    snackMake(toolbar, "成功保存到:" + filepath);
                 }
                 stream.close();
             } catch (IOException e) {
@@ -241,7 +256,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
+        snackMake(toolbar, "成功保存到:" + filepath);
+//        Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
     }
 
     /**

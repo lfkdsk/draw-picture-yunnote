@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,7 +39,6 @@ import com.lfk.drawapictiure.R;
 import com.lfk.drawapictiure.Tools.HttpUtils;
 import com.lfk.drawapictiure.Tools.NetUtils;
 import com.lfk.drawapictiure.Tools.SPUtils;
-//import com.orhanobut.logger.Logger;
 import com.lfk.drawapictiure.bluetoothc.BluetoothChat;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -54,6 +54,8 @@ import java.util.List;
 
 import me.drakeet.materialdialog.MaterialDialog;
 
+//import com.orhanobut.logger.Logger;
+
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
     private TabLayout mTabLayout;
@@ -65,6 +67,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     private String EditName;
     public static String token;
     private MaterialDialog materialDialog;
+    private Snackbar snackbar;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +80,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         tintManager.setNavigationBarTintEnabled(true);
         tintManager.setTintColor(getResources().getColor(R.color.darkblue));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.menu_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.menu_toolbar);
         toolbar.setBackground(getResources().getDrawable(R.color.blue));
         toolbar.setTitle("云手帐");
         toolbar.setTitleTextColor(Color.WHITE);
@@ -165,7 +169,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                                         materialDialog.dismiss();
                                     })
                                     .setPositiveButton("确认", view -> {
-                                        showToast("清理成功");
+//                                        showToast("清理成功");
+                                        snackMake(toolbar, "清理成功");
                                         materialDialog.dismiss();
                                     });
                             materialDialog.show();
@@ -297,9 +302,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void showToast(String toast) {
-        Toast.makeText(MenuActivity.this, toast, Toast.LENGTH_SHORT);
-    }
+//    private void showToast(String toast) {
+//        Toast.makeText(MenuActivity.this, toast, Toast.LENGTH_SHORT);
+//    }
 
 
     private class MainAdapter extends FragmentPagerAdapter {
@@ -369,24 +374,28 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Toast.makeText(MenuActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                    snackMake(toolbar, "上传成功");
+//                    Toast.makeText(MenuActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                     break;
                 case UserInfo.CONTENT_ERROR:
-                    Toast.makeText(MenuActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                    snackMake(toolbar, "上传失败");
+//                    Toast.makeText(MenuActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                     break;
                 case UserInfo.EDIT_SUCCESS:
                     try {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
                         String id = jsonObject.getString("message");
                         if (id.equals("modify file ok")) {
-                            Toast.makeText(MenuActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
+                            snackMake(toolbar, "更新成功");
+//                            Toast.makeText(MenuActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
                 case UserInfo.FANKUI_SUCCESS:
-                    Toast.makeText(MenuActivity.this, "反馈成功", Toast.LENGTH_SHORT).show();
+                    snackMake(toolbar, "反馈成功");
+//                    Toast.makeText(MenuActivity.this, "反馈成功", Toast.LENGTH_SHORT).show();
                     break;
                 case UserInfo.CREATE_NOTE:
                     try {
@@ -506,6 +515,14 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+
+    private void snackMake(View view, String text) {
+        snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG);
+        snackbar.setActionTextColor(Color.WHITE);
+        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+        ve.setBackgroundColor(getResources().getColor(R.color.blue));
+        snackbar.show();
+    }
 
     @Override
     protected void onDestroy() {
