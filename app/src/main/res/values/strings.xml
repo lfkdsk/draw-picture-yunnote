@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">云手帐</string>
 
     <string name="hello_world">Hello world!</string>
@@ -13,4 +13,31 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_regist_avtivity">RegistAvtivity</string>
     <string name="title_activity_choose">ChooseActivity</string>
+
+    <string name="send">发送</string>
+    <string name="not_connected">未连接</string>
+    <string name="bt_not_enabled_leaving">未打开蓝牙</string>
+    <string name="title_connecting">连接中…</string>
+    <string name="title_connected_to">已连接<xliff:g id="device_name">%1$s</xliff:g></string>
+    <string name="title_not_connected">未连接</string>
+
+    <!--  DeviceListActivity -->
+    <string name="scanning">扫描设备</string>
+    <string name="select_device">选择设备连接</string>
+    <string name="none_paired">没有连接过设备</string>
+    <string name="none_found">找不到设备</string>
+    <string name="title_paired_devices">连接过的设备</string>
+    <string name="title_other_devices">其他可连接设备</string>
+    <string name="button_scan">搜索设备</string>
+
+    <!-- Options Menu -->
+    <string name="secure_connect">安全连接</string>
+    <string name="insecure_connect">非安全连接</string>
+    <string name="discoverable">允许他人扫描</string>
+    <string name="find_type">选择模式</string>
+    <string name="code">功能列表</string>
+    <string name="input">手动输入</string>
+    <string name="code_items">0.开启/关闭自然风模式\n1.开启/关闭制冷\n2.开启/关闭摆页
+            \n3.开启强风\n4.开启弱风\n5.关闭\n6.查询环境温度\n7.强风百分比\n8.弱风百分比\nt.定时功能</string>
+    <string name="about">关于</string>
 </resources>

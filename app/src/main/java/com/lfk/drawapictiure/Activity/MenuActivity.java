@@ -39,6 +39,7 @@ import com.lfk.drawapictiure.Tools.HttpUtils;
 import com.lfk.drawapictiure.Tools.NetUtils;
 import com.lfk.drawapictiure.Tools.SPUtils;
 //import com.orhanobut.logger.Logger;
+import com.lfk.drawapictiure.bluetoothc.BluetoothChat;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -213,6 +214,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                                     });
                             materialDialog.show();
                             break;
+                        case R.id.open_bluetooth:
+                            Intent intent = new Intent(this, BluetoothChat.class);
+                            startActivity(intent);
                     }
                     return true;
                 });

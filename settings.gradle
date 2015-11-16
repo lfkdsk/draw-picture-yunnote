@@ -1,1 +1,1 @@
-include ':app', ':cirlib', ':color-picker-view', ':materiallog', ':sweetsheet'
+include ':app', ':cirlib', ':color-picker-view', ':materiallog', ':sweetsheet', ':dialogplus'

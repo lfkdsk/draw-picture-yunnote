@@ -1,5 +1,4 @@
 package com.lfk.drawapictiure.Activity;
-
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableStringBuilder;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -57,7 +55,6 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     private ScrollView mRootView;
     private ProgressDialog progressDialog = null;
     private boolean firstInto = true;
-    private SpannableStringBuilder content = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +154,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
             }
             return true;
         });
+
     }
 
     /**
