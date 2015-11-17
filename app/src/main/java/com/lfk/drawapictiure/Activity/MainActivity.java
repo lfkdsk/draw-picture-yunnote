@@ -36,7 +36,6 @@ import com.mingle.sweetpick.SweetSheet;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-import com.orhanobut.logger.Logger;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -68,8 +67,10 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
     private static boolean EDITABLED = false;
     private PathNode pathNode;
     private static SQLiteDatabase database;
+    // 保存的文件名
     private static String Paintname;
     private ImageButton imageButton;
+    // menu
     private SweetSheet mSweetSheet;
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -122,7 +123,9 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
             if (paint_name.equals("新建")) {
                 THEFIRSTTIME = true;
                 setMenu();
-//                Logger.e("new it");
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+                Date now = new Date();
+                Paintname = formatter.format(now);
             } else {
                 THEFIRSTTIME = false;
                 Paintname = paint_name;
@@ -260,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
             mMaterialDialog.show();
             return true;
         });
+
 //        file.setOnClickListener(view -> {
 //            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 //            intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -267,10 +271,10 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
 //            startActivityForResult(Intent.createChooser(intent, "选择图片"), SELECT_PICTURE);
 //        });
 
-        rightLowerButton.setOnLongClickListener(view -> {
-            paintView.PathNodeToJson(pathNode, new File(UserInfo.PATH + "/json"));
-            return true;
-        });
+//        rightLowerButton.setOnLongClickListener(view -> {
+//            paintView.PathNodeToJson(pathNode, new File(UserInfo.PATH + "/json"));
+//            return true;
+//        });
 
         findViewById(R.id.main_back).setOnClickListener(this);
         findViewById(R.id.paint_player_it).setOnClickListener(this);
@@ -466,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         intent.putExtra("cache", pic);
         intent.putExtra("name", name);
         intent.putExtra("type", 0);
-        Logger.e("intent it");
+//        Logger.e("intent it");
         this.setResult(RESULT_OK, intent);
     }
 
@@ -493,7 +497,6 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         rightLowerMenu.close(true);
         rightLowerButton.setVisibility(View.INVISIBLE);
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -527,14 +530,16 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
     private void initSweetSheet() {
         ArrayList<MenuEntity> menuEntities = new ArrayList<>();
         MenuEntity share_menuEntity = new MenuEntity("分享", R.drawable.iconfont_share, "share");
-        MenuEntity text_menuEntity = new MenuEntity("保存为帧动画", R.drawable.iconfont_txt, "txt");
+        MenuEntity z_menuEntity = new MenuEntity("保存为帧动画", R.drawable.iconfont_txt, "lfk");
         MenuEntity jpg_menuEntity = new MenuEntity("保存为图片", R.drawable.iconfont_jpg, "pic");
         MenuEntity pdf_menuEntity = new MenuEntity("导出为pdf文件", R.drawable.iconfont_pdf, "pdf");
-        menuEntities.add(text_menuEntity);
+        MenuEntity import_menuEntity = new MenuEntity("导入帧动画", R.drawable.iconfont_pdf, "import");
+        menuEntities.add(z_menuEntity);
+        menuEntities.add(import_menuEntity);
         menuEntities.add(jpg_menuEntity);
         menuEntities.add(pdf_menuEntity);
         menuEntities.add(share_menuEntity);
-        mSweetSheet = new SweetSheet((RelativeLayout) findViewById(R.id.note_relative));
+        mSweetSheet = new SweetSheet((RelativeLayout) findViewById(R.id.paint_reative));
         mSweetSheet.setMenuList(menuEntities);
         mSweetSheet.setBackgroundEffect(new DimEffect(8));
         mSweetSheet.setDelegate(new RecyclerViewDelegate(true));
@@ -542,7 +547,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
             // 根据返回值, true 会关闭 SweetSheet ,false 则不会.
             switch (menuEntity.id) {
                 case "share":
-                    Uri uri = paintView.BitmapToPicture(new File(UserInfo.PATH + "/picture"));
+                    Uri uri = paintView.BitmapToPicture(Paintname, new File(UserInfo.PATH + "/picture"));
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
@@ -555,15 +560,50 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                 case "pdf":
                     saveAsPdf();
                     break;
+                case "import":
+                    importPic();
+                    break;
+                case "lfk":
+                    saveAsZen();
+                    break;
             }
             return true;
         });
     }
 
-    private void saveAsBitmap() {
-        paintView.BitmapToPicture(new File(UserInfo.PATH + "/picture"));
+    /**
+     * 保存帧动画
+     */
+    private void saveAsZen() {
+//        new Thread(() -> {
+        paintView.PathNodeToJson(Paintname, pathNode, new File(UserInfo.PATH + "/json"));
+        Toast.makeText(this, "成功保存到:" + UserInfo.PATH + "/picture/" + Paintname + ".l", Toast.LENGTH_SHORT).show();
+//        }).start();
     }
 
+    /**
+     * 引入帧动画
+     */
+    private void importPic() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("file/*");
+        startActivityForResult(Intent.createChooser(intent, "选择帧动画"), SELECT_FILE);
+    }
+
+    /**
+     * 保存图片
+     */
+    private void saveAsBitmap() {
+        new Thread(() -> {
+            paintView.BitmapToPicture(Paintname, new File(UserInfo.PATH + "/picture"));
+        }).start();
+        Toast.makeText(this, "成功保存到:" + UserInfo.PATH + "/picture/" + Paintname + ".jpg", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 保存PDF
+     */
     private void saveAsPdf() {
         if (!UserInfo.TextPath.exists()) {
             UserInfo.TextPath.mkdirs();
@@ -572,10 +612,12 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         new Thread(() -> {
             try {
                 PdfMaker.makeIt(MainActivity.this, filepath, paintView.saveAsBitmap());
+
             } catch (DocumentException | IOException e) {
                 e.printStackTrace();
             }
         }).start();
+        Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -593,6 +635,9 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                 setMenu();
                 break;
             case R.id.paint_more:
+                if (VISIBLE) {
+                    setMenu();
+                }
                 if (mSweetSheet.isShow()) {
                     mSweetSheet.dismiss();
                 }
@@ -600,6 +645,4 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                 break;
         }
     }
-
-
 }

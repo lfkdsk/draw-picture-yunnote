@@ -45,9 +45,7 @@ import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -353,15 +351,15 @@ public class PaintView extends View {
      * @param file Pictures' file
      * @author lfk_dsk@hotmail.com
      */
-    public Uri BitmapToPicture(File file) {
+    public Uri BitmapToPicture(String name, File file) {
         if (!file.exists()) {
             file.mkdirs();
         }
         FileOutputStream fileOutputStream;
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-            Date now = new Date();
-            File tempfile = new File(file + "/" + formatter.format(now) + ".jpg");
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+//            Date now = new Date();
+            File tempfile = new File(file + "/" + name + ".jpg");
             fileOutputStream = new FileOutputStream(tempfile);
             Bitmap mBitmapbg = BitmapFactory.decodeResource(context.getResources(), mBitmapBackGround).
                     copy(Bitmap.Config.ARGB_8888, false);
@@ -373,7 +371,7 @@ public class PaintView extends View {
                 mBitmapbg = toConformBitmap(mBitmapbg, mBitmap);
             }
             mBitmapbg.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-            showCustomToast(tempfile.getName() + "已保存");
+//            showCustomToast(tempfile.getName() + "已保存");
             return Uri.fromFile(tempfile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -399,21 +397,18 @@ public class PaintView extends View {
     }
 
     // 把PathNode转换成json
-    public void PathNodeToJson(PathNode pathNode, File file) {
+    public void PathNodeToJson(String name, PathNode pathNode, File file) {
         String json = "";
         if (!file.exists()) {
             file.mkdirs();
         }
         json = PathNodeToJsonString(pathNode, json);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        Date now = new Date();
-        File tempfile = new File(file + "/" + formatter.format(now) + ".lfk");
+        File tempfile = new File(file + "/" + name + ".l");
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(tempfile);
             byte[] bytes = json.getBytes();
             fileOutputStream.write(bytes);
             fileOutputStream.close();
-            showCustomToast(tempfile.getName() + "已保存");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -478,6 +473,7 @@ public class PaintView extends View {
         handler.sendMessage(message);
     }
 
+    // 内容传入
     public void ContentToPathNodeToHandle(String content) {
         Message message = new Message();
         message.obj = content;
