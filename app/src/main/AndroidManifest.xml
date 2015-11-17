@@ -14,7 +14,7 @@
     <application
         android:name=".Info.PathNode"
         android:allowBackup="true"
-        android:icon="@mipmap/icon"
+        android:icon="@mipmap/icon_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
@@ -61,6 +61,9 @@
             android:name=".bluetoothc.DeviceListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
+            android:name=".Activity.ExplorerActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

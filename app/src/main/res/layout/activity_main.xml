@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/paint_reative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/paint_reative"
     android:clipToPadding="false"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
@@ -34,7 +34,7 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@drawable/blue_button_select"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/iconfont_player" />
 
@@ -45,7 +45,7 @@
                 android:layout_marginLeft="6dp"
                 android:layout_weight="1"
                 android:background="@drawable/blue_button_select"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/iconfont_modify" />
 

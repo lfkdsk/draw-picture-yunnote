@@ -85,7 +85,7 @@ public class FileExplorer extends ListView {
                 try {
                     File file = new File(dir + "/" + fileName);
                     if (file.isFile()) {
-                        if(fileChosenListener == null) {
+                        if (fileChosenListener == null) {
                             String mime = getMIMEType(file);
                             if (mime != null) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -108,7 +108,7 @@ public class FileExplorer extends ListView {
             @Override
             public boolean onItemLongClick(final AdapterView<?> parent, View view, int position, long id) {
                 final String fileName = ((TextView) view.findViewById(R.id.list_text)).getText().toString();
-                if(new File(dir + "/" + fileName).isDirectory()) {
+                if (new File(dir + "/" + fileName).isDirectory()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setMessage("确认选择该文件夹吗？");
                     builder.setTitle("提示");
@@ -153,14 +153,14 @@ public class FileExplorer extends ListView {
     /**
      * 获取文件的后缀名
      *
-     * @param file  接受一个文件，返回该文件的后缀名，如果是目录则返回null
+     * @param file 接受一个文件，返回该文件的后缀名，如果是目录则返回null
      */
-    public String getType(File file){
-        if(file.isDirectory())
+    public String getType(File file) {
+        if (file.isDirectory())
             return null;
 
         int dotIndex = file.getName().lastIndexOf(".");
-        if(dotIndex < 0)
+        if (dotIndex < 0)
             return "";
 
         return file.getName().substring(dotIndex).toLowerCase();
@@ -169,13 +169,13 @@ public class FileExplorer extends ListView {
     /**
      * 获取文件的MIME类型
      *
-     * @param file   接受一个文件，返回该文件的MIME，如果是目录则返回null
+     * @param file 接受一个文件，返回该文件的MIME，如果是目录则返回null
      */
     private String getMIMEType(File file) {
         String type = getType(file);
 
         //在MIME和文件类型的匹配表中找到对应的MIME类型。
-        if(type != null) {
+        if (type != null) {
             boolean found = false;
             for (String[] data : MIME_Table) {
                 if (type.equals(data[0])) {
@@ -184,7 +184,7 @@ public class FileExplorer extends ListView {
                     break;
                 }
             }
-            if(!found)
+            if (!found)
                 type = "*/*";
         }
         return type;
@@ -212,18 +212,21 @@ public class FileExplorer extends ListView {
         for (File file : files) {
             Map<String, Object> fileInfo = new Hashtable<>();
 
-            if (file.isFile())
+            if (file.isFile()) {
                 fileInfo.put("image", Images[1]);
-            else
+                if (getType(file).equals("kfl")) {
+                    fileInfo.put("image", Images_Needs[0]);
+                }
+            } else {
                 fileInfo.put("image", Images[0]);
-
+            }
             fileInfo.put("filename", file.getName());
             fileList.add(fileInfo);
         }
 
         listAdapter.notifyDataSetChanged();
 
-        if(pathChangedListener != null)
+        if (pathChangedListener != null)
             pathChangedListener.onPathChanged(path);
     }
 
@@ -234,7 +237,7 @@ public class FileExplorer extends ListView {
         File file = new File(dir);
         String parentDir = file.getParent();
 
-        if(parentDir != null && !file.getPath().equals(root)) {
+        if (parentDir != null && !file.getPath().equals(root)) {
             dir = parentDir;
             setCurrentDir(dir);
             return true;
@@ -267,7 +270,7 @@ public class FileExplorer extends ListView {
     /**
      * 获取文件类型大小比例
      */
-    private void getProportion (TreeMap<String,Long> map,String path) throws Exception {
+    private void getProportion(TreeMap<String, Long> map, String path) throws Exception {
         File[] files = new File(path).listFiles();
 
         //如果这不是一个路径
@@ -297,13 +300,14 @@ public class FileExplorer extends ListView {
 
     class SizeComparator implements Comparator<String> {
         TreeMap<String, Long> map;
-        SizeComparator(TreeMap<String, Long> map){
+
+        SizeComparator(TreeMap<String, Long> map) {
             this.map = map;
         }
 
         @Override
         public int compare(String a, String b) {
-            if(map.get(a).equals(map.get(b)))
+            if (map.get(a).equals(map.get(b)))
                 return 0;
             return map.get(a) > map.get(b) ? 1 : -1;
         }
@@ -314,8 +318,9 @@ public class FileExplorer extends ListView {
     ////////////////////////////////////////////////////////////////////////////
 
     // 文件夹&文件 图片
-    private int[] Images = {R.drawable.file,R.drawable.afile};
+    private int[] Images = {R.drawable.file, R.drawable.afile};
 
+    private int[] Images_Needs = {R.drawable.iconfont_kfl};
 
     //MIME类型集合，{后缀名，MIME类型}
     public static final String[][] MIME_Table = {

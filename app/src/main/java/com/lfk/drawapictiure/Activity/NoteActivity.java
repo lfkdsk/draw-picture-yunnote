@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -32,6 +33,7 @@ import com.mingle.entity.MenuEntity;
 import com.mingle.sweetpick.DimEffect;
 import com.mingle.sweetpick.RecyclerViewDelegate;
 import com.mingle.sweetpick.SweetSheet;
+import com.orhanobut.logger.Logger;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -325,6 +327,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.note_menu:
+                mMarkDownView.dismiss();
                 if (mSweetSheet.isShow()) {
                     mSweetSheet.dismiss();
                 }
@@ -357,10 +360,10 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
                 mMarkDownView.setTextKeepState(sb, TextView.BufferType.SPANNABLE);
                 sb = null;
             } else {
-                new Thread(() -> {
-                    sb = markdown.getFormattedContent();
-                    mMarkDownView.setTextKeepState(sb, TextView.BufferType.SPANNABLE);
-                });
+//                new Thread(() -> {
+                sb = markdown.getFormattedContent();
+                mMarkDownView.setTextKeepState(sb, TextView.BufferType.SPANNABLE);
+//                });
             }
             progressDialog.dismiss();
             editText.setVisibility(View.INVISIBLE);
@@ -400,6 +403,15 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
 
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            mMarkDownView.dismiss();
+            Logger.e("接受点击");
         }
         return true;
     }

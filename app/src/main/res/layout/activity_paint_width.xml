@@ -4,28 +4,29 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     tools:context="com.lfk.drawapictiure.PaintWidthActivity">
+
     <TextView
+        android:id="@+id/width_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/width_text"
         android:layout_centerHorizontal="true"
         android:text="10"
-        android:textSize="16sp"
-        />
+        android:textSize="16sp" />
+
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/width_text"
         android:text="宽度:"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:textSize="16sp" />
+
     <SeekBar
-        android:max="100"
-        android:thumb="@drawable/thumb_bar"
-        android:progressDrawable="@drawable/bg_bar"
-        android:layout_marginTop="4dp"
-        android:layout_below="@+id/width_text"
+        android:id="@+id/width_seek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/width_seek"
-        />
+        android:layout_below="@+id/width_text"
+        android:layout_marginTop="4dp"
+        android:max="100"
+        android:progressDrawable="@drawable/bg_bar"
+        android:thumb="@drawable/thumb_bar" />
 </RelativeLayout>

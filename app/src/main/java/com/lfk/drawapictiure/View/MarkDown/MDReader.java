@@ -3,7 +3,6 @@ package com.lfk.drawapictiure.View.MarkDown;
 
 
 import android.text.SpannableStringBuilder;
-import android.util.Log;
 
 import com.lfk.drawapictiure.View.MarkDown.parser.BoldParser;
 import com.lfk.drawapictiure.View.MarkDown.parser.CenterParser;
@@ -11,7 +10,6 @@ import com.lfk.drawapictiure.View.MarkDown.parser.HeaderParser;
 import com.lfk.drawapictiure.View.MarkDown.parser.OrderListParser;
 import com.lfk.drawapictiure.View.MarkDown.parser.QuoteParser;
 import com.lfk.drawapictiure.View.MarkDown.parser.UnOrderListParser;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +85,7 @@ public class MDReader {
             }
         }
 
-        Logger.d("content" + pContent);
+//        Logger.d("content" + pContent);
 
         // Parse the word format
         StringBuilder mNoFmtContent = new StringBuilder();
@@ -110,7 +108,7 @@ public class MDReader {
                 }
             }
 
-            Logger.d("content2" + pContent);
+//            Logger.d("content2" + pContent);
 
             // If no format found, move to next position
             if (!isFmtFound) {
@@ -122,7 +120,7 @@ public class MDReader {
                 }
             }
 
-            Logger.d("content3" + pContent);
+//            Logger.d("content3" + pContent);
 
         }
         return mdline;
@@ -137,6 +135,6 @@ public class MDReader {
                 builder.append("Word: " + word.mRawContent + ", " + word.mFormat + "\n");
             }
         }
-        Log.d("JNote", builder.toString());
+//        Log.d("JNote", builder.toString());
     }
 }

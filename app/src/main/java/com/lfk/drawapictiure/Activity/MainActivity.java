@@ -410,6 +410,8 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                     }
                     break;
             }
+        } else if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(MainActivity.this, "未选择文件", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -595,10 +597,12 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
      * 引入帧动画
      */
     private void importPic() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("file/*");
-        startActivityForResult(Intent.createChooser(intent, "选择帧动画"), SELECT_FILE);
+        Intent intent = new Intent(MainActivity.this, ExplorerActivity.class);
+        startActivityForResult(intent, SELECT_FILE);
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        intent.addCategory(Intent.CATEGORY_OPENABLE);
+//        intent.setType("file/*");
+//        startActivityForResult(Intent.createChooser(intent, "选择帧动画"), SELECT_FILE);
     }
 
     /**
