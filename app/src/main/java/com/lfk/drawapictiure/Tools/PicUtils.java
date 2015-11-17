@@ -23,6 +23,9 @@ import android.util.Base64;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ScrollView;
+
+import com.orhanobut.logger.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -494,4 +497,31 @@ public class PicUtils {
 
         return list;
     }
+
+    /**
+     * 截取ScrollView
+     *
+     * @param v
+     * @return
+     */
+    public static Bitmap createBitmap(Context context, ScrollView v) {
+        int width = 0, height = 0;
+        for (int i = 0; i < v.getChildCount(); i++) {
+            width += v.getChildAt(i).getWidth();
+            height += v.getChildAt(i).getHeight();
+        }
+        Logger.e("检测到 " + "h: " + height + "w: " + width);
+        if (width <= 0 || height <= 0) {
+            Logger.e("未检测到 " + "h: " + height + "w: " + width);
+            return null;
+        }
+        int h = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getHeight();
+        if (height < h)
+            height = h;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        v.draw(canvas);
+        return bitmap;
+    }
+
 }

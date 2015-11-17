@@ -49,15 +49,15 @@
                 android:src="@drawable/iconfont_modify" />
 
             <ImageButton
-                android:id="@+id/paint_share_it"
+                android:id="@+id/paint_more"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginLeft="6dp"
                 android:layout_weight="1"
                 android:background="@drawable/blue_button_select"
                 android:padding="8dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_share" />
+                android:scaleType="fitXY"
+                android:src="@drawable/iconfont_more" />
         </LinearLayout>
     </RelativeLayout>
 

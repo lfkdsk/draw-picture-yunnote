@@ -2,11 +2,9 @@ package com.lfk.drawapictiure.Activity;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
@@ -16,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -26,6 +23,7 @@ import com.lfk.drawapictiure.Datebase.SQLHelper;
 import com.lfk.drawapictiure.Info.UserInfo;
 import com.lfk.drawapictiure.R;
 import com.lfk.drawapictiure.Tools.PdfMaker;
+import com.lfk.drawapictiure.Tools.PicUtils;
 import com.lfk.drawapictiure.Tools.SPUtils;
 import com.lfk.drawapictiure.View.MarkDown.MDReader;
 import com.lfk.drawapictiure.View.ZoomTextView;
@@ -34,7 +32,6 @@ import com.mingle.entity.MenuEntity;
 import com.mingle.sweetpick.DimEffect;
 import com.mingle.sweetpick.RecyclerViewDelegate;
 import com.mingle.sweetpick.SweetSheet;
-import com.orhanobut.logger.Logger;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -210,7 +207,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         }
         new Thread(() -> {
             try {
-                PdfMaker.makeIt(NoteActivity.this, filepath, createBitmap(mRootView));
+                PdfMaker.makeIt(NoteActivity.this, filepath, PicUtils.createBitmap(this, mRootView));
             } catch (DocumentException | IOException e) {
                 e.printStackTrace();
             }
@@ -233,7 +230,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         if (MARKDOWN) {
             try {
                 FileOutputStream stream = new FileOutputStream(filepath);
-                Bitmap bitmap = createBitmap(mRootView);
+                Bitmap bitmap = PicUtils.createBitmap(this, mRootView);
                 if (bitmap != null) {
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 //                    Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
@@ -265,32 +262,6 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         }
         snackMake(toolbar, "成功保存到:" + filepath);
 //        Toast.makeText(this, "成功保存到:" + filepath, Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * 截取ScrollView
-     *
-     * @param v
-     * @return
-     */
-    public Bitmap createBitmap(ScrollView v) {
-        int width = 0, height = 0;
-        for (int i = 0; i < v.getChildCount(); i++) {
-            width += v.getChildAt(i).getWidth();
-            height += v.getChildAt(i).getHeight();
-        }
-        Logger.e("检测到 " + "h: " + height + "w: " + width);
-        if (width <= 0 || height <= 0) {
-            Logger.e("未检测到 " + "h: " + height + "w: " + width);
-            return null;
-        }
-        int h = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getHeight();
-        if (height < h)
-            height = h;
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        v.draw(canvas);
-        return bitmap;
     }
 
     /**
@@ -387,8 +358,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 new Thread(() -> {
                     sb = markdown.getFormattedContent();
+                    mMarkDownView.setTextKeepState(sb, TextView.BufferType.SPANNABLE);
                 });
-                mMarkDownView.setTextKeepState(sb, TextView.BufferType.SPANNABLE);
             }
             progressDialog.dismiss();
             editText.setVisibility(View.INVISIBLE);

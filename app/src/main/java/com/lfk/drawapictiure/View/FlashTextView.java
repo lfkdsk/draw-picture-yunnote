@@ -47,7 +47,8 @@ public class FlashTextView extends TextView {
                         0,
                         new int[]{
                                 Color.WHITE,
-                                context.getResources().getColor(R.color.darkblue),
+                                context.getResources().getColor(R.color.white_blue),
+                                0xffffffff,
                                 Color.WHITE
                         },
                         null,

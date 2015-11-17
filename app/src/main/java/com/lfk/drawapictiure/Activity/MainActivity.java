@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,8 +25,14 @@ import com.lfk.drawapictiure.Datebase.SQLHelper;
 import com.lfk.drawapictiure.Info.PathNode;
 import com.lfk.drawapictiure.Info.UserInfo;
 import com.lfk.drawapictiure.R;
+import com.lfk.drawapictiure.Tools.PdfMaker;
 import com.lfk.drawapictiure.Tools.SPUtils;
 import com.lfk.drawapictiure.View.PaintView;
+import com.lowagie.text.DocumentException;
+import com.mingle.entity.MenuEntity;
+import com.mingle.sweetpick.DimEffect;
+import com.mingle.sweetpick.RecyclerViewDelegate;
+import com.mingle.sweetpick.SweetSheet;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -34,7 +41,9 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import afzkl.development.colorpickerview.dialog.ColorPickerDialogFragment;
@@ -61,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
     private static SQLiteDatabase database;
     private static String Paintname;
     private ImageButton imageButton;
+    private SweetSheet mSweetSheet;
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -69,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         setContentView(R.layout.activity_main);
 
         setVisibility();
+        initSweetSheet();
 
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
@@ -264,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         findViewById(R.id.main_back).setOnClickListener(this);
         findViewById(R.id.paint_player_it).setOnClickListener(this);
         findViewById(R.id.paint_paint_it).setOnClickListener(this);
-        findViewById(R.id.paint_share_it).setOnClickListener(this);
+        findViewById(R.id.paint_more).setOnClickListener(this);
         imageButton = (ImageButton) findViewById(R.id.paint_paint_it);
         initMenu();
     }
@@ -500,12 +511,72 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                 paintView.ReDoORUndo(false);
                 break;
             case KeyEvent.KEYCODE_BACK:
-                finishTheActivity();
+                if (mSweetSheet.isShow()) {
+                    mSweetSheet.dismiss();
+                } else {
+                    finishTheActivity();
+                }
                 break;
         }
         return true;
     }
 
+    /**
+     * 菜单
+     */
+    private void initSweetSheet() {
+        ArrayList<MenuEntity> menuEntities = new ArrayList<>();
+        MenuEntity share_menuEntity = new MenuEntity("分享", R.drawable.iconfont_share, "share");
+        MenuEntity text_menuEntity = new MenuEntity("保存为帧动画", R.drawable.iconfont_txt, "txt");
+        MenuEntity jpg_menuEntity = new MenuEntity("保存为图片", R.drawable.iconfont_jpg, "pic");
+        MenuEntity pdf_menuEntity = new MenuEntity("导出为pdf文件", R.drawable.iconfont_pdf, "pdf");
+        menuEntities.add(text_menuEntity);
+        menuEntities.add(jpg_menuEntity);
+        menuEntities.add(pdf_menuEntity);
+        menuEntities.add(share_menuEntity);
+        mSweetSheet = new SweetSheet((RelativeLayout) findViewById(R.id.note_relative));
+        mSweetSheet.setMenuList(menuEntities);
+        mSweetSheet.setBackgroundEffect(new DimEffect(8));
+        mSweetSheet.setDelegate(new RecyclerViewDelegate(true));
+        mSweetSheet.setOnMenuItemClickListener((position, menuEntity) -> {
+            // 根据返回值, true 会关闭 SweetSheet ,false 则不会.
+            switch (menuEntity.id) {
+                case "share":
+                    Uri uri = paintView.BitmapToPicture(new File(UserInfo.PATH + "/picture"));
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                    sendIntent.setType("image/jpeg");
+                    startActivity(Intent.createChooser(sendIntent, "发送图片"));
+                    break;
+                case "pic":
+                    saveAsBitmap();
+                    break;
+                case "pdf":
+                    saveAsPdf();
+                    break;
+            }
+            return true;
+        });
+    }
+
+    private void saveAsBitmap() {
+        paintView.BitmapToPicture(new File(UserInfo.PATH + "/picture"));
+    }
+
+    private void saveAsPdf() {
+        if (!UserInfo.TextPath.exists()) {
+            UserInfo.TextPath.mkdirs();
+        }
+        String filepath = UserInfo.TextPath.getPath() + "/" + System.currentTimeMillis() + ".pdf";
+        new Thread(() -> {
+            try {
+                PdfMaker.makeIt(MainActivity.this, filepath, paintView.saveAsBitmap());
+            } catch (DocumentException | IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 
     @Override
     public void onClick(View view) {
@@ -521,15 +592,14 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
             case R.id.paint_paint_it:
                 setMenu();
                 break;
-            case R.id.paint_share_it:
-                Uri uri = paintView.BitmapToPicture(new File(UserInfo.PATH + "/picture"));
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                sendIntent.setType("image/jpeg");
-                startActivity(Intent.createChooser(sendIntent, "发送图片"));
+            case R.id.paint_more:
+                if (mSweetSheet.isShow()) {
+                    mSweetSheet.dismiss();
+                }
+                mSweetSheet.toggle();
                 break;
         }
     }
+
 
 }
