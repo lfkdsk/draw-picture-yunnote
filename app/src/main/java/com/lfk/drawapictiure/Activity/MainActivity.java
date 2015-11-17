@@ -392,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         final ContentValues values = new ContentValues();
         final Date d = new Date();
         final java.text.DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        Logger.e(THEFIRSTTIME + "", "结束");
+//        Logger.e(THEFIRSTTIME + "", "结束");
         if (THEFIRSTTIME) {
             View view = View.inflate(this, R.layout.activity_paint_name, null);
             final MaterialEditText editText = (MaterialEditText) view.findViewById(R.id.material_edit);

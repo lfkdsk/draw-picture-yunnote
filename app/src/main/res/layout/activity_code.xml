@@ -36,7 +36,8 @@
         android:layout_marginTop="16dp"
         android:ellipsize="end"
         android:gravity="center"
-        android:text="谁是谁"
+        android:singleLine="true"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="20sp" />
 

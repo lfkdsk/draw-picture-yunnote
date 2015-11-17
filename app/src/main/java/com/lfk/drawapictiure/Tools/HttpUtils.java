@@ -12,7 +12,6 @@ import android.util.Log;
 
 import com.lfk.drawapictiure.Activity.MenuActivity;
 import com.lfk.drawapictiure.Info.UserInfo;
-import com.orhanobut.logger.Logger;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,13 +29,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
-
-//import android.util.Log;
-//import com.orhanobut.logger.Logger;
-
 public class HttpUtils {
 
-    // post  type = SUCCESS ID
     public static void PostToHttp(Context context, String url, List<NameValuePair> params, Handler handler, int type) {
 //        Logger.e("url", url);
         if ((!UserInfo.ONLY_WIFI && NetUtils.isConnected(context)) || (UserInfo.ONLY_WIFI && NetUtils.isWifi(context))) {
@@ -234,7 +228,7 @@ public class HttpUtils {
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         HttpEntity entity = httpResponse.getEntity();
                         String response = EntityUtils.toString(entity, "utf-8");
-                        Logger.e("HttpGet_response", response);
+//                        Logger.e("HttpGet_response", response);
                         if (response.equals("[]")) {
                             Message message = new Message();
                             message.what = UserInfo.EMPTY;

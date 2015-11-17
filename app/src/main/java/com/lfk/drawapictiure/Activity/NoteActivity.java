@@ -13,6 +13,7 @@ import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -27,6 +28,7 @@ import com.lfk.drawapictiure.R;
 import com.lfk.drawapictiure.Tools.PdfMaker;
 import com.lfk.drawapictiure.Tools.SPUtils;
 import com.lfk.drawapictiure.View.MarkDown.MDReader;
+import com.lfk.drawapictiure.View.ZoomTextView;
 import com.lowagie.text.DocumentException;
 import com.mingle.entity.MenuEntity;
 import com.mingle.sweetpick.DimEffect;
@@ -50,7 +52,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     private static boolean THEFIRSTTIME = false;
     private static SQLiteDatabase database;
     private static String oldstring;
-    private TextView mMarkDownView;
+    private ZoomTextView mMarkDownView;
     private MDReader markdown = null;
     private boolean MARKDOWN = false;
     private SweetSheet mSweetSheet;
@@ -59,6 +61,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     private boolean firstInto = true;
     private Snackbar snackbar;
     private Toolbar toolbar;
+    private SpannableStringBuilder sb = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +93,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         editText = (MaterialEditText) findViewById(R.id.note_edit);
         findViewById(R.id.note_markdown).setOnClickListener(this);
         findViewById(R.id.note_menu).setOnClickListener(this);
-        mMarkDownView = (TextView) findViewById(R.id.markdown);
+        mMarkDownView = (ZoomTextView) findViewById(R.id.markdown);
         mMarkDownView.setVisibility(View.INVISIBLE);
         mRootView = (ScrollView) findViewById(R.id.root_view);
         findViewById(R.id.note_back_button).setOnClickListener(this);
@@ -109,7 +112,11 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         if (firstInto && !THEFIRSTTIME) {
             firstInto = false;
-            markDown();
+//            markDown();
+            markdown = new MDReader(editText.getText().toString());
+            new Thread(() -> {
+                sb = markdown.getFormattedContent();
+            }).start();
         }
     }
 
@@ -340,6 +347,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.note_back_button:
                 if (MARKDOWN) {
                     markDown();
+                    mMarkDownView.dismiss();
                 } else {
                     finishTheActivity();
                 }
@@ -367,12 +375,21 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
             mRootView.setVisibility(View.INVISIBLE);
             editText.setVisibility(View.VISIBLE);
             MARKDOWN = false;
+            mMarkDownView.dismiss();
             ((ImageView) findViewById(R.id.note_markdown)).
                     setImageDrawable(getResources().getDrawable(R.drawable.icon_markdown));
             progressDialog.dismiss();
         } else {
             markdown = new MDReader(editText.getText().toString());
-            mMarkDownView.setTextKeepState(markdown.getFormattedContent(), TextView.BufferType.SPANNABLE);
+            if (sb != null) {
+                mMarkDownView.setTextKeepState(sb, TextView.BufferType.SPANNABLE);
+                sb = null;
+            } else {
+                new Thread(() -> {
+                    sb = markdown.getFormattedContent();
+                });
+                mMarkDownView.setTextKeepState(sb, TextView.BufferType.SPANNABLE);
+            }
             progressDialog.dismiss();
             editText.setVisibility(View.INVISIBLE);
             mRootView.setVisibility(View.VISIBLE);
@@ -404,6 +421,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     if (MARKDOWN) {
                         markDown();
+                        mMarkDownView.dismiss();
                     } else {
                         finishTheActivity();
                     }

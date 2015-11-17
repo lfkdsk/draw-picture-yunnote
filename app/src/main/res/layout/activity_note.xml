@@ -126,7 +126,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:layout_below="@+id/note_toolbar">
-        <TextView
+        <com.lfk.drawapictiure.View.ZoomTextView
             android:id="@+id/markdown"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
