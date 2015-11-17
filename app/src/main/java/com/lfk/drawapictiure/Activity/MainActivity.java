@@ -401,7 +401,9 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                     File file = new File(data.getData().getPath());
                     if (file.exists()) {
                         if (FileUtils.getType(file).equals(".kfl"))
-                            paintView.JsonToPathNodeToHandle(data.getData());
+                            new Thread(() -> {
+                                paintView.JsonToPathNodeToHandle(data.getData());
+                            }).start();
                         else {
                             Toast.makeText(MainActivity.this, "文件类型错误", Toast.LENGTH_SHORT).show();
                         }
