@@ -107,7 +107,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        if (firstInto && !THEFIRSTTIME) {
+        // 第一次进入 首次编辑 字数小于1000
+        if (firstInto && !THEFIRSTTIME && editText.getText().length() < 1000) {
             firstInto = false;
 //            markDown();
             markdown = new MDReader(editText.getText().toString());

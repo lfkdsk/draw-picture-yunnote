@@ -25,6 +25,7 @@ import com.lfk.drawapictiure.Datebase.SQLHelper;
 import com.lfk.drawapictiure.Info.PathNode;
 import com.lfk.drawapictiure.Info.UserInfo;
 import com.lfk.drawapictiure.R;
+import com.lfk.drawapictiure.Tools.FileUtils;
 import com.lfk.drawapictiure.Tools.PdfMaker;
 import com.lfk.drawapictiure.Tools.SPUtils;
 import com.lfk.drawapictiure.View.PaintView;
@@ -397,7 +398,16 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                     paintView.setmBitmap(data.getData());
                     break;
                 case SELECT_FILE:
-                    paintView.JsonToPathNodeToHandle(data.getData());
+                    File file = new File(data.getData().getPath());
+                    if (file.exists()) {
+                        if (FileUtils.getType(file).equals(".kfl"))
+                            paintView.JsonToPathNodeToHandle(data.getData());
+                        else {
+                            Toast.makeText(MainActivity.this, "文件类型错误", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "文件不存在", Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
         }
@@ -577,7 +587,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
     private void saveAsZen() {
 //        new Thread(() -> {
         paintView.PathNodeToJson(Paintname, pathNode, new File(UserInfo.PATH + "/json"));
-        Toast.makeText(this, "成功保存到:" + UserInfo.PATH + "/picture/" + Paintname + ".l", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "成功保存到:" + UserInfo.PATH + "/picture/" + Paintname + ".kfl", Toast.LENGTH_SHORT).show();
 //        }).start();
     }
 

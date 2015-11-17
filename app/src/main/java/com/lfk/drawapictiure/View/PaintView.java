@@ -403,7 +403,7 @@ public class PaintView extends View {
             file.mkdirs();
         }
         json = PathNodeToJsonString(pathNode, json);
-        File tempfile = new File(file + "/" + name + ".l");
+        File tempfile = new File(file + "/" + name + ".kfl");
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(tempfile);
             byte[] bytes = json.getBytes();
